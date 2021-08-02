@@ -21,69 +21,9 @@ jobs:
         set -e
         brew install gnu-time coreutils
 
-    - name: Install Coq
-      run: |
-        set -e
-        eval $(opam env)
-        opam update
-        opam install opam-depext
-        opam-depext coq
-        opam pin add coq 8.13.1
-      env:
-        OPAMYES: "true"
-
-    - name: echo build params
-      run: |
-        eval $(opam env)
-        echo "::group::sysctl -n machdep.cpu.brand_string"
-        sysctl -n machdep.cpu.brand_string
-        echo "::endgroup::"
-        echo "::group::sysctl -a | grep machdep.cpu"
-        sysctl -a | grep machdep.cpu
-        echo "::endgroup::"
-        echo "::group::uname -a"
-        uname -a
-        echo "::endgroup::"
-        echo "::group::sw_vers -productVersion"
-        sw_vers -productVersion
-        echo "::endgroup::"
-        echo "::group::system_profiler SPSoftwareDataType"
-        system_profiler SPSoftwareDataType
-        echo "::endgroup::"
-        echo "::group::opam list"
-        opam list
-        echo "::endgroup::"
-        echo "::group::ocamlc -config"
-        ocamlc -config
-        echo "::endgroup::"
-        echo "::group::coqc --config"
-        coqc --config
-        echo "::endgroup::"
-        echo "::group::coqc --version"
-        coqc --version
-        echo "::endgroup::"
-        echo "::group::true | coqtop"
-        true | coqtop
-        echo "::endgroup::"
-        echo "::group::opam env"
-        opam env
-        echo "::endgroup::"
-        echo '::group::echo "$PATH"'
-        echo "$PATH"
-        echo "::endgroup::"
-        echo '::group::find /Users/runner/work/test/test/_opam/'
-        find /Users/runner/work/test/test/_opam/
-        echo "::endgroup::"
+    - run: opam env
     - uses: actions/checkout@v2
+    - run: opam env
     - name: submodules-init
       uses: snickerbockers/submodules-init@v4
-    - name: deps
-      run: |
-        set -x
-        echo "$PATH"
-        eval $(opam env)
-        echo "$PATH"
-        which coqc
-        which coq_makefile
-        coqc -v
-        coq_makefile -h
+    - run: opam env
