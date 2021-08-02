@@ -71,8 +71,8 @@ jobs:
         echo '::group::echo "$PATH"'
         echo "$PATH"
         echo "::endgroup::"
-        echo '::group::find Users/runner/work/test/test/_opam/'
-        find Users/runner/work/test/test/_opam/
+        echo '::group::find /Users/runner/work/test/test/_opam/'
+        find /Users/runner/work/test/test/_opam/
         echo "::endgroup::"
     - uses: actions/checkout@v2
     - name: submodules-init
