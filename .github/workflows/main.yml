@@ -70,6 +70,7 @@ jobs:
       uses: snickerbockers/submodules-init@v4
     - name: deps
       run: |
+        set -e
         eval $(opam env)
         which coqc
         which coq_makefile
