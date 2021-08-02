@@ -65,15 +65,25 @@ jobs:
         echo "::group::true | coqtop"
         true | coqtop
         echo "::endgroup::"
+        echo "::group::opam env"
+        opam env
+        echo "::endgroup::"
+        echo '::group::echo "$PATH"'
+        echo "$PATH"
+        echo "::endgroup::"
+        echo '::group::find Users/runner/work/test/test/_opam/'
+        find Users/runner/work/test/test/_opam/
+        echo "::endgroup::"
     - uses: actions/checkout@v2
     - name: submodules-init
       uses: snickerbockers/submodules-init@v4
     - name: deps
       run: |
-        set -e
+        set -x
+        echo "$PATH"
         eval $(opam env)
+        echo "$PATH"
         which coqc
         which coq_makefile
-        echo "$PATH"
         coqc -v
         coq_makefile -h
