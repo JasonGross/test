@@ -17,4 +17,6 @@ jobs:
         ocaml-compiler: 4.11.1
     - run: opam env
     - uses: actions/checkout@v2
+      with:
+        clean: false
     - run: opam env
