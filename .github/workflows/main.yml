@@ -15,15 +15,6 @@ jobs:
       uses: ocaml/setup-ocaml@v2
       with:
         ocaml-compiler: 4.11.1
-
-    - name: Install system dependencies
-      run: |
-        set -e
-        brew install gnu-time coreutils
-
     - run: opam env
     - uses: actions/checkout@v2
-    - run: opam env
-    - name: submodules-init
-      uses: snickerbockers/submodules-init@v4
     - run: opam env
