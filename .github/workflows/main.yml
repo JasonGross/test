@@ -8,15 +8,7 @@ on:
 jobs:
   build:
 
-    runs-on: macOS-10.15
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Set up OCaml
-      uses: ocaml/setup-ocaml@v2
-      with:
-        ocaml-compiler: 4.11.1
-    - run: opam env
-    - uses: actions/checkout@v2
-      with:
-        clean: false
-    - run: opam env
+    - run: echo '${{ true }} ${{ false }} ${{ true && "a" }}'
