@@ -11,4 +11,4 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - run: echo '${{ true }} ${{ false }} ${{ true && "a" }}'
+    - run: echo '${{ true }} ${{ false }}'
