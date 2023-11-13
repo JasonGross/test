@@ -12,3 +12,25 @@ jobs:
 
     steps:
     - run: echo '${{ true }} ${{ false }}'
+
+  analyze-dumpbin:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up MSVC Environment
+      uses: ilammy/msvc-dev-cmd@v1
+
+    - name: Find dumpbin Path
+      id: find-dumpbin
+      run: |
+        echo "Finding dumpbin path..."
+        $dumpbinPath = Get-Command dumpbin.exe | Select-Object -ExpandProperty Source
+        echo "dumpbin path: $dumpbinPath"
+        echo "DUMPBIN_PATH=$dumpbinPath" >> $GITHUB_ENV
+
+    - name: Run dumpbin on itself
+      run: |
+        echo "Running dumpbin on itself..."
+        dumpbin.exe /headers $env:DUMPBIN_PATH
