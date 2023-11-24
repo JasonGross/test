@@ -26,8 +26,8 @@ jobs:
         eval $(opam env)
         opam update -y
         opam pin add -y 'https://github.com/ocaml-wasm/dune.git#wasm'
-        opam pin add -y https://github.com/ocaml-wasm/wasm_of_ocaml.git
+        opam pin add -y --no-action https://github.com/ocaml-wasm/wasm_of_ocaml.git
     - name: install wasm_of_ocaml
       run: |
         eval $(opam env)
-        opam install -y wasm_of_ocaml ocamlfind
+        opam install -y wasm_of_ocaml-compiler ocamlfind
