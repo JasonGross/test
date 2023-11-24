@@ -12,9 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         coq-version: [ 'master' ]
-        ocaml-compiler: [ '4.14.1' ]
-    env:
-      OPAMCLI: '2.1'
+        ocaml-compiler: [ '4.14' ]
     steps:
     - uses: actions/checkout@v4
       with:
@@ -29,6 +27,8 @@ jobs:
         opam update -y
         opam pin add -y 'https://github.com/ocaml-wasm/dune.git#wasm'
         opam pin add -y --no-action --with-version 5.3.0 https://github.com/ocaml-wasm/wasm_of_ocaml.git
+      env:
+        OPAMCLI: '2.1'
     - name: install wasm_of_ocaml
       run: |
         eval $(opam env)
