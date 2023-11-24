@@ -6,31 +6,29 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-
+  build-wasm-of-ocaml:
+    needs: build
     runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        coq-version: [ 'master' ]
+        ocaml-compiler: [ '4.11.1' ]
     steps:
-    - run: echo '${{ true }} ${{ false }}'
-
-  analyze-dumpbin:
-    runs-on: windows-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up MSVC Environment
-      uses: ilammy/msvc-dev-cmd@v1
-
-    - name: Find dumpbin Path
-      id: find-dumpbin
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - name: Set up OCaml
+      uses: ocaml/setup-ocaml@v2
+      with:
+        ocaml-compiler: ${{ matrix.ocaml-compiler }}
+    - name: set up custom dune and wasm_of_ocaml
       run: |
-        echo "Finding dumpbin path..."
-        $dumpbinPath = Get-Command dumpbin.exe | Select-Object -ExpandProperty Source
-        echo "dumpbin path: $dumpbinPath"
-        echo "DUMPBIN_PATH=$dumpbinPath" >> $GITHUB_ENV
-
-    - name: Run dumpbin on itself
+        eval $(opam env)
+        opam pin add -y 'https://github.com/ocaml-wasm/dune.git#wasm'
+        opam pin add -y --debug-level=3 https://github.com/ocaml-wasm/wasm_of_ocaml.git
+        opam update -y
+    - name: install wasm_of_ocaml
       run: |
-        echo "Running dumpbin on itself..."
-        dumpbin.exe /headers $env:DUMPBIN_PATH
+        eval $(opam env)
+        opam install -y wasm_of_ocaml ocamlfind
