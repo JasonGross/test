@@ -7,7 +7,6 @@ on:
 
 jobs:
   build-wasm-of-ocaml:
-    needs: build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
