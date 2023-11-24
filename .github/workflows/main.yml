@@ -30,4 +30,5 @@ jobs:
     - name: install wasm_of_ocaml
       run: |
         eval $(opam env)
-        opam install -y wasm_of_ocaml-compiler ocamlfind
+        opam install -y js_of_ocaml
+        opam install -y wasm_of_ocaml-compiler
