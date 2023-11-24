@@ -21,6 +21,10 @@ jobs:
       uses: ocaml/setup-ocaml@v2
       with:
         ocaml-compiler: ${{ matrix.ocaml-compiler }}
+    - uses: acifani/setup-tinygo@v2
+      with:
+        tinygo-version: '0.30.0'
+        binaryen-version: '116'
     - name: set up custom dune and wasm_of_ocaml
       run: |
         eval $(opam env)
