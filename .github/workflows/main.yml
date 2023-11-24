@@ -25,7 +25,7 @@ jobs:
       run: |
         eval $(opam env)
         opam pin add -y 'https://github.com/ocaml-wasm/dune.git#wasm'
-        opam pin add -y --debug-level=3 https://github.com/ocaml-wasm/wasm_of_ocaml.git
+        opam pin add -y --debug-level=3 --use-internal-solver https://github.com/ocaml-wasm/wasm_of_ocaml.git
         opam update -y
     - name: install wasm_of_ocaml
       run: |
