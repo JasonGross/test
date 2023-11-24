@@ -27,8 +27,14 @@ jobs:
         opam update -y
         opam pin add -y 'https://github.com/ocaml-wasm/dune.git#wasm'
         opam pin add -y --no-action https://github.com/ocaml-wasm/wasm_of_ocaml.git
+    - name: install js_of_ocaml
+      run: |
+        eval $(opam env)
+        opam install -y --best-effort js_of_ocaml
+        opam install -y js_of_ocaml
     - name: install wasm_of_ocaml
       run: |
         eval $(opam env)
-        opam install -y js_of_ocaml
+        opam install -y --best-effort wasm_of_ocaml-compiler
         opam install -y wasm_of_ocaml-compiler
+      if: always()
