@@ -1,38 +1,22 @@
-name: CI
+name: Example Workflow
 
-on:
-  push:
-  pull_request:
-  workflow_dispatch:
+on: [push, pull_request]
 
 jobs:
-  build-wasm-of-ocaml:
+  build:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
-        coq-version: [ 'master' ]
-        ocaml-compiler: [ '4.14' ]
+        include:
+          - use_container: true
+            container_image: 'node:12'
+          - use_container: false
+
+    container:
+      image: ${{ matrix.use_container && matrix.container_image }}
+
     steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: recursive
-    - name: Set up OCaml
-      uses: ocaml/setup-ocaml@v2
-      with:
-        ocaml-compiler: ${{ matrix.ocaml-compiler }}
-    - uses: acifani/setup-tinygo@v2
-      with:
-        tinygo-version: '0.30.0'
-        binaryen-version: '116'
-    - name: set up custom dune and wasm_of_ocaml
-      run: |
-        eval $(opam env)
-        opam update -y
-        opam pin add -y 'https://github.com/ocaml-wasm/dune.git#wasm'
-        opam pin add -y --no-action --cli=2.1 --with-version 5.3.0 https://github.com/ocaml-wasm/wasm_of_ocaml.git
-    - name: install wasm_of_ocaml
-      run: |
-        eval $(opam env)
-        opam install -y wasm_of_ocaml-compiler
-      if: always()
+      - uses: actions/checkout@v2
+
+      - name: Run a command
+        run: echo "Running in ${matrix.use_container ? 'a container' : 'the runner environment'}"
