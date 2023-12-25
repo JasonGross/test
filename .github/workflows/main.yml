@@ -14,4 +14,13 @@ jobs:
           for d in /__w /github/workflow; do
             sudo chmod -R a=u $d
           done
+          sudo su root
+          id -u
+          id -g
+          pwd
+      - run: |
+          id -u
+          id -g
+          pwd
+          ls -la
       - uses: actions/checkout@v4
