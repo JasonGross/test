@@ -17,10 +17,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
       - name: Run a command
         run: |
-          if [ ${{ matrix.use_container }} = true ]; then
+          if [ '${{ matrix.use_container }}' = true ]; then
             echo "Running in a container"
           else
             echo "Running in the runner environment"
