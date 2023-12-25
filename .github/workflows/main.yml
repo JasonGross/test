@@ -19,4 +19,11 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Run a command
-        run: echo "Running in ${{ matrix.use_container ? 'a container' : 'the runner environment' }}"
+        run: |
+          if [ ${{ matrix.use_container }} = true ]; then
+            echo "Running in a container"
+          else
+            echo "Running in the runner environment"
+          fi
+
+      
