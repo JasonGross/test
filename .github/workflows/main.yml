@@ -10,8 +10,5 @@ jobs:
       - run: |
           id -u
           id -g
-      - run: |
-          id -u
-          id -g
-        container: ''
+          ls -la .
       - uses: actions/checkout@v4
