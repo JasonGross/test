@@ -8,13 +8,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - use_container: true
-            container_image: 'node:12'
-          - use_container: false
+          - container: 'node:12'
+          - container: ''
 
-    container:
-      image: ${{ matrix.use_container && matrix.container_image }}
-
+    container: ${{ matrix.container }}
     steps:
       - uses: actions/checkout@v2
       - name: Run a command
