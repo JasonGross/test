@@ -7,9 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     #container: coqorg/coq:dev
     steps:
-    # - uses: actions/checkout@v4
-    #   with:
-    #     submodules: recursive
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - run: sudo chmod -R a+rw .
     - name: echo
       uses: coq-community/docker-coq-action@v1
       with:
@@ -19,5 +20,6 @@ jobs:
         custom_script: |
           echo "${COQ_IMAGE}"
           printf "COQ_IMAGE=%s\n" "${COQ_IMAGE}" >> .coqimage
+    - run: docker images
     - run: cat .coqimage >> ${GITHUB_ENV}
     - run: echo "${COQ_IMAGE}"
