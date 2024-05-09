@@ -15,8 +15,9 @@ jobs:
       with:
         coq_version: dev
         ocaml_version: default
-        export: CI ALLOW_DIFF COQCHKEXTRAFLAGS GITHUB_STEP_SUMMARY COQ_IMAGE GITHUB_ENV
+        export: CI ALLOW_DIFF COQCHKEXTRAFLAGS GITHUB_STEP_SUMMARY COQ_IMAGE
         custom_script: |
           echo "${COQ_IMAGE}"
-          printf "COQ_IMAGE=%s\n" "${COQ_IMAGE}" >> ${GITHUB_ENV}
+          printf "COQ_IMAGE=%s\n" "${COQ_IMAGE}" >> .coqimage
+    - run: cat .coqimage >> ${GITHUB_ENV}
     - run: echo "${COQ_IMAGE}"
