@@ -6,6 +6,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     #container: coqorg/coq:dev
+    outputs:
+      coq_image_tag: ${{ steps.set-output-step.outputs.coq_image_tag }}
     steps:
     - uses: actions/checkout@v4
       with:
@@ -20,6 +22,25 @@ jobs:
         custom_script: |
           echo "${COQ_IMAGE}"
           printf "COQ_IMAGE=%s\n" "${COQ_IMAGE}" >> .coqimage
-    - run: docker images --format "{{.Repository}}:{{.Tag}}" | grep -o 'coqorg/coq:.*dev.*'
-    - run: cat .coqimage >> ${GITHUB_ENV}
-    - run: echo "${COQ_IMAGE}"
+    - name: Set coq_image_tag Output
+      id: set-output-step
+      run: |
+        coq_image_tag="$(cat .coqimage)"
+        if [ -z "${coq_image_tag}" ]; then
+          echo "::warning::.coqimage is empty, parsing docker images"
+          echo "::group::docker images"
+          docker images
+          echo "::endgroup::"
+          echo "::group::docker images --format '{{.Repository}}:{{.Tag}}'"
+          docker images --format "{{.Repository}}:{{.Tag}}"
+          echo "::endgroup::"
+          coq_image_tag="$(docker images --format "{{.Repository}}:{{.Tag}}" | grep -o 'coqorg/coq:.*dev.*')"
+        fi
+        echo "::set-output name=coq_image_tag::$coq_image_tag"
+
+  fetch-output-job:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch coq_image_tag from Previous Job
+        run: echo "COQ_IMAGE_TAG is ${{ needs.set-output-job.outputs.coq_image_tag }}"
