@@ -21,7 +21,7 @@ jobs:
         export: CI ALLOW_DIFF COQCHKEXTRAFLAGS GITHUB_STEP_SUMMARY COQ_IMAGE
         custom_script: |
           echo "${COQ_IMAGE}"
-          printf "COQ_IMAGE=%s\n" "${COQ_IMAGE}" >> .coqimage
+          printf "%s" "${COQ_IMAGE}" >> .coqimage
     - name: Set coq_image_tag Output
       id: set-output-step
       run: |
@@ -36,7 +36,7 @@ jobs:
           echo "::endgroup::"
           coq_image_tag="$(docker images --format "{{.Repository}}:{{.Tag}}" | grep -o 'coqorg/coq:.*dev.*')"
         fi
-        echo "::set-output name=coq_image_tag::$coq_image_tag"
+        echo "coq_image_tag=${coq_image_tag}" >> $GITHUB_OUTPUT
 
   fetch-output-job:
     needs: build
