@@ -15,6 +15,6 @@ jobs:
       with:
         coq_version: dev
         ocaml_version: default
-        export: CI ALLOW_DIFF COQCHKEXTRAFLAGS GITHUB_STEP_SUMMARY
+        export: CI ALLOW_DIFF COQCHKEXTRAFLAGS GITHUB_STEP_SUMMARY COQ_IMAGE
         custom_script: |
           echo "${COQ_IMAGE}"
