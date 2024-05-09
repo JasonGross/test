@@ -20,6 +20,6 @@ jobs:
         custom_script: |
           echo "${COQ_IMAGE}"
           printf "COQ_IMAGE=%s\n" "${COQ_IMAGE}" >> .coqimage
-    - run: docker images
+    - run: docker images --format "{{.Repository}}:{{.Tag}}" | grep -o 'coqorg/coq:.*dev.*'
     - run: cat .coqimage >> ${GITHUB_ENV}
     - run: echo "${COQ_IMAGE}"
