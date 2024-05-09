@@ -8,6 +8,7 @@ jobs:
     #container: coqorg/coq:dev
     outputs:
       coq_image_tag: ${{ steps.set-output-step.outputs.coq_image_tag }}
+    name: build2
     steps:
     - uses: actions/checkout@v4
       with:
@@ -43,4 +44,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fetch coq_image_tag from Previous Job
-        run: echo "COQ_IMAGE_TAG is ${{ needs.set-output-job.outputs.coq_image_tag }}"
+        run: echo "COQ_IMAGE_TAG is ${{ needs.build.outputs.coq_image_tag }}"
