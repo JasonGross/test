@@ -26,7 +26,7 @@ jobs:
     - name: Set COQ_IMAGE
       run: |
         COQ_IMAGE="$(cat .coqimage)"
-        if [ -z "${coq_image_tag}" ]; then
+        if [ -z "${COQ_IMAGE}" ]; then
           echo "::warning::.coqimage is empty, parsing docker images"
           echo "::group::docker images"
           docker images
