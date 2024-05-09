@@ -7,20 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     #container: coqorg/coq:dev
     steps:
-      - run: |
-          id -u
-          id -g
-          ls -la .
-          for d in /__w /github/workflow; do
-            sudo chmod -R a=u $d
-          done
-          sudo su root
-          id -u
-          id -g
-          pwd
-      - run: |
-          id -u
-          id -g
-          pwd
-          ls -la
-      - uses: actions/checkout@v4
+    # - uses: actions/checkout@v4
+    #   with:
+    #     submodules: recursive
+    - name: echo
+      uses: coq-community/docker-coq-action@v1
+      with:
+        coq_version: dev
+        ocaml_version: default
+        export: CI ALLOW_DIFF COQCHKEXTRAFLAGS GITHUB_STEP_SUMMARY
+        custom_script: |
+          echo "${COQ_IMAGE}"
