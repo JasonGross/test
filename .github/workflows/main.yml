@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     #container: coqorg/coq:dev
     outputs:
-      coq_image_tag: ${{ steps.set-output-step.outputs.coq_image_tag }}
+      coq_image_name: ${{ steps.set-output-step.outputs.coq_image_name }}
     name: build2
     steps:
     - uses: actions/checkout@v4
@@ -23,25 +23,51 @@ jobs:
         custom_script: |
           echo "${COQ_IMAGE}"
           printf "%s" "${COQ_IMAGE}" >> .coqimage
-    - name: Set coq_image_tag Output
-      id: set-output-step
+    - name: Set COQ_IMAGE
       run: |
-        coq_image_tag="$(cat .coqimage)"
+        COQ_IMAGE="$(cat .coqimage)"
         if [ -z "${coq_image_tag}" ]; then
           echo "::warning::.coqimage is empty, parsing docker images"
           echo "::group::docker images"
           docker images
           echo "::endgroup::"
           echo "::group::docker images --format '{{.Repository}}:{{.Tag}}'"
-          docker images --format "{{.Repository}}:{{.Tag}}"
+          docker images --filter "reference=coqorg/coq*" --format "{{.Repository}}:{{.Tag}}"
           echo "::endgroup::"
-          coq_image_tag="$(docker images --format "{{.Repository}}:{{.Tag}}" | grep -o 'coqorg/coq:.*dev.*')"
+          COQ_IMAGE="$(docker images --filter "reference=coqorg/coq*" --format "{{.Repository}}:{{.Tag}}" | grep -o 'coqorg/coq:.*dev.*')"
         fi
-        echo "coq_image_tag=${coq_image_tag}" >> $GITHUB_OUTPUT
-
+        echo "COQ_IMAGE=${COQ_IMAGE}" >> $GITHUB_ENV
+    - run: docker save "$COQ_IMAGE" -o image.tar
+    - name: Set coq_image_name Output to ${{ runner.os }}-docker-${{ hashFiles('image.tar') }}
+      id: set-output-step
+      run: |
+        echo "coq_image_name=${{ runner.os }}-docker-${{ hashFiles('image.tar') }}" >> $GITHUB_OUTPUT
+    - name: Cache Docker image
+      uses: actions/cache@v3
+      with:
+        path: image.tar
+        key: ${{ runner.os }}-docker-${{ hashFiles('image.tar') }}
+        
   fetch-output-job:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch coq_image_tag from Previous Job
-        run: echo "COQ_IMAGE_TAG is ${{ needs.build.outputs.coq_image_tag }}"
+      # Restore the cached Docker image .tar file
+      - name: Restore cached Docker image ${{ needs.build.outputs.coq_image_name }}
+        uses: actions/cache@v3
+        with:
+          path: image.tar
+          key: ${{ needs.build.outputs.coq_image_name }}
+      # Load the image from the .tar file
+      - name: Load Docker image
+        run: |
+          docker load -i image.tar
+      - name: echo
+        uses: coq-community/docker-coq-action@v1
+        with:
+          coq_version: dev
+          ocaml_version: default
+          export: CI ALLOW_DIFF COQCHKEXTRAFLAGS GITHUB_STEP_SUMMARY COQ_IMAGE
+          custom_script: |
+            echo "${COQ_IMAGE}"
+            printf "%s" "${COQ_IMAGE}" >> .coqimage
