@@ -5,69 +5,13 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-    #container: coqorg/coq:dev
-    outputs:
-      coq_image_name: ${{ steps.set-output-step.outputs.coq_image_name }}
-    name: build2
+    name: build
     steps:
     - uses: actions/checkout@v4
       with:
         submodules: recursive
-    - run: sudo chmod -R a+rw .
-    - name: echo
-      uses: coq-community/docker-coq-action@v1
-      with:
-        coq_version: dev
-        ocaml_version: default
-        export: CI ALLOW_DIFF COQCHKEXTRAFLAGS GITHUB_STEP_SUMMARY COQ_IMAGE
-        custom_script: |
-          echo "${COQ_IMAGE}"
-          printf "%s" "${COQ_IMAGE}" >> .coqimage
-    - name: Set COQ_IMAGE
+    - name: support perf
       run: |
-        COQ_IMAGE="$(cat .coqimage)"
-        if [ -z "${COQ_IMAGE}" ]; then
-          echo "::warning::.coqimage is empty, parsing docker images"
-          echo "::group::docker images"
-          docker images
-          echo "::endgroup::"
-          echo "::group::docker images --format '{{.Repository}}:{{.Tag}}'"
-          docker images --filter "reference=coqorg/coq*" --format "{{.Repository}}:{{.Tag}}"
-          echo "::endgroup::"
-          COQ_IMAGE="$(docker images --filter "reference=coqorg/coq*" --format "{{.Repository}}:{{.Tag}}" | grep -o 'coqorg/coq:.*dev.*')"
-        fi
-        echo "COQ_IMAGE=${COQ_IMAGE}" >> $GITHUB_ENV
-    - run: docker save "$COQ_IMAGE" -o image.tar
-    - name: Set coq_image_name Output to ${{ runner.os }}-docker-${{ hashFiles('image.tar') }}
-      id: set-output-step
-      run: |
-        echo "coq_image_name=${{ runner.os }}-docker-${{ hashFiles('image.tar') }}" >> $GITHUB_OUTPUT
-    - name: Cache Docker image
-      uses: actions/cache@v3
-      with:
-        path: image.tar
-        key: ${{ runner.os }}-docker-${{ hashFiles('image.tar') }}
-        
-  fetch-output-job:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      # Restore the cached Docker image .tar file
-      - name: Restore cached Docker image ${{ needs.build.outputs.coq_image_name }}
-        uses: actions/cache@v3
-        with:
-          path: image.tar
-          key: ${{ needs.build.outputs.coq_image_name }}
-      # Load the image from the .tar file
-      - name: Load Docker image
-        run: |
-          docker load -i image.tar
-      - name: echo
-        uses: coq-community/docker-coq-action@v1
-        with:
-          coq_version: dev
-          ocaml_version: default
-          export: CI ALLOW_DIFF COQCHKEXTRAFLAGS GITHUB_STEP_SUMMARY COQ_IMAGE
-          custom_script: |
-            echo "${COQ_IMAGE}"
-            printf "%s" "${COQ_IMAGE}" >> .coqimage
+        sudo sh -c 'echo 0 >/proc/sys/kernel/perf_event_paranoid'
+        sudo sh -c 'echo 0 >/proc/sys/kernel/kptr_restrict'
+    - run: perf stat ls
