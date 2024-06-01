@@ -21,4 +21,5 @@ jobs:
       with:
         ghc-version: ${{ matrix.ghc-version }}
     - run: ghc --version
-    - run: command time -f "bedrock2_fiat_crypto (real: %e, user: %U, sys: %S, mem: %M ko)" ghc +RTS -M${{ matrix.heap }} -RTS -o bedrock2_fiat_crypto bedrock2_fiat_crypto.hs
+    - run: |
+        command time -f "bedrock2_fiat_crypto (real: %e, user: %U, sys: %S, mem: %M ko)" ghc +RTS -M${{ matrix.heap }} -RTS -o bedrock2_fiat_crypto bedrock2_fiat_crypto.hs
