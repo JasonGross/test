@@ -9,7 +9,7 @@ jobs:
       matrix:
         ghc-version: [ '9.10' , '9.8' , '9.6' ]
         #[ '9.10.1' , '9.8.2' , '9.6.5' ]
-        heap: [ '7G' , '9G' ]
+        heap: [ '7G' , '15G' ]
 
     runs-on: ubuntu-latest
     name: build
