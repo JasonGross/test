@@ -4,26 +4,21 @@ on: [push, pull_request]
 
 jobs:
   build:
+    strategy:
+      fail-fast: false
+      matrix:
+        ghc-version: [ '9.10' , '9.8' , '9.6' ]
+        #[ '9.10.1' , '9.8.2' , '9.6.5' ]
+        heap: [ '7G' , '9G' ]
+
     runs-on: ubuntu-latest
     name: build
     steps:
     - uses: actions/checkout@v4
       with:
         submodules: recursive
-    - name: support perf
-      run: |
-        sudo sh -c 'echo 0 >/proc/sys/kernel/perf_event_paranoid'
-        sudo sh -c 'echo 0 >/proc/sys/kernel/kptr_restrict'
-    - run: perf stat ls
-    - name: Install perf
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y linux-tools-common linux-tools-$(uname -r)
-
-    - name: List perf events
-      run: |
-        perf list
-
-    - name: Run perf stat
-      run: |
-        sudo perf stat -e instructions,cycles -- sleep 1
+    - uses: haskell-actions/setup@v2
+      with:
+        ghc-version: ${{ matrix.ghc-version }}
+    - run: ghc --version
+    - run: command time -f "bedrock2_fiat_crypto (real: %e, user: %U, sys: %S, mem: %M ko)" ghc +RTS -M${{ matrix.heap }} -RTS -o bedrock2_fiat_crypto bedrock2_fiat_crypto.hs
