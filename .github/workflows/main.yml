@@ -12,6 +12,8 @@ jobs:
       with:
         submodules: recursive
     - uses: ocaml/setup-ocaml@v3
+      with:
+        ocaml-compiler: 4.13.1
     - run: opam exec -- chmod +x test.sh
     - run: opam exec -- cat test.sh
     - run: opam exec -- ./test.sh
@@ -20,12 +22,14 @@ jobs:
   buildv2:
 
     runs-on: windows-latest
-    name: build
+    name: buildv2
     steps:
     - uses: actions/checkout@v2
       with:
         submodules: recursive
-    - uses: ocaml/setup-ocaml@v3
+    - uses: ocaml/setup-ocaml@v2
+      with:
+        ocaml-compiler: 4.13.1
     - run: opam exec -- chmod +x test.sh
     - run: opam exec -- cat test.sh
     - run: opam exec -- ./test.sh
