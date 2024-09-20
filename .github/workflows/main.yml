@@ -14,9 +14,10 @@ jobs:
     - uses: ocaml/setup-ocaml@v3
       with:
         ocaml-compiler: 4.13.1
+    - run: opam config report
     - run: opam exec -- chmod +x test.sh
     - run: opam exec -- cat test.sh
-    - run: opam exec -- bash ./test.sh
+    - run: opam exec -- ./test.sh
 
 
   buildv2:
@@ -30,6 +31,7 @@ jobs:
     - uses: ocaml/setup-ocaml@v2
       with:
         ocaml-compiler: 4.13.1
+    - run: opam config report
     - run: opam exec -- chmod +x test.sh
     - run: opam exec -- cat test.sh
-    - run: opam exec -- bash ./test.sh
+    - run: opam exec -- ./test.sh
