@@ -4,22 +4,28 @@ on: [push, pull_request]
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        ghc-version: [ '9.10' , '9.8' , '9.6' ]
-        #[ '9.10.1' , '9.8.2' , '9.6.5' ]
-        heap: [ '7G' , '15G' ]
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     name: build
     steps:
     - uses: actions/checkout@v4
       with:
         submodules: recursive
-    - uses: haskell-actions/setup@v2
+    - uses: ocaml/setup-ocaml@v3
+    - run: opam exec -- chmod +x test.sh
+    - run: opam exec -- cat test.sh
+    - run: opam exec -- ./test.sh
+
+
+  buildv2:
+
+    runs-on: windows-latest
+    name: build
+    steps:
+    - uses: actions/checkout@v2
       with:
-        ghc-version: ${{ matrix.ghc-version }}
-    - run: ghc --version
-    - run: |
-        command time -f "bedrock2_fiat_crypto (real: %e, user: %U, sys: %S, mem: %M ko)" ghc +RTS -M${{ matrix.heap }} -RTS -o bedrock2_fiat_crypto bedrock2_fiat_crypto.hs
+        submodules: recursive
+    - uses: ocaml/setup-ocaml@v3
+    - run: opam exec -- chmod +x test.sh
+    - run: opam exec -- cat test.sh
+    - run: opam exec -- ./test.sh
