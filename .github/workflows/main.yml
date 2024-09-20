@@ -16,7 +16,7 @@ jobs:
         ocaml-compiler: 4.13.1
     - run: opam exec -- chmod +x test.sh
     - run: opam exec -- cat test.sh
-    - run: opam exec -- ./test.sh
+    - run: opam exec -- bash ./test.sh
 
 
   buildv2:
@@ -32,4 +32,4 @@ jobs:
         ocaml-compiler: 4.13.1
     - run: opam exec -- chmod +x test.sh
     - run: opam exec -- cat test.sh
-    - run: opam exec -- ./test.sh
+    - run: opam exec -- bash ./test.sh
