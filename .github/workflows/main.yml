@@ -1,5 +1,7 @@
 name: Example Workflow
 
+# test for https://github.com/ocaml/setup-ocaml/issues/866#issuecomment-2702110831
+
 on: [push, pull_request]
 
 jobs:
