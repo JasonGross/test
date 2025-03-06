@@ -19,6 +19,7 @@ jobs:
     - run: opam config report
     - run: opam exec -- chmod +x test.sh
     - run: opam exec -- cat test.sh
+    - run: opam exec -- bash ./test.sh
     - run: opam exec -- ./test.sh
 
 
@@ -36,4 +37,5 @@ jobs:
     - run: opam config report
     - run: opam exec -- chmod +x test.sh
     - run: opam exec -- cat test.sh
+    - run: opam exec -- bash ./test.sh
     - run: opam exec -- ./test.sh
