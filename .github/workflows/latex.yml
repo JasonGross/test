@@ -2,15 +2,12 @@ name: LaTeX Build
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     # This limits the entire job to 2 minutes.
-    timeout-minutes: 2
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v3
