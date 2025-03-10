@@ -1,0 +1,29 @@
+name: LaTeX Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # This limits the entire job to 2 minutes.
+    timeout-minutes: 2
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install LaTeX dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            texlive-latex-base \
+            texlive-latex-extra \
+            texlive-latex-recommended \
+            texlive-fonts-recommended \
+            python3-pygments
+
+      - name: Compile LaTeX document
+        run: timeout 120s /usr/bin/time pdflatex -shell-escape test.tex
