@@ -23,6 +23,10 @@ jobs:
         ocaml-compiler: 4.13.1
     - run: opam config report
     - run: opam exec -- bash -c 'install -d .github/'
+    - run: opam pin add --kind=version coq 8.18.0
+      if: always()
+    - run: opam exec -- coqc -q printing.v
+      if: always()
 
 
   buildv3216:
@@ -43,4 +47,8 @@ jobs:
         ocaml-compiler: 4.13.1
     - run: opam config report
     - run: opam exec -- bash -c 'install -d .github/'
+    - run: opam pin add --kind=version coq 8.18.0
+      if: always()
+    - run: opam exec -- coqc -q printing.v
+      if: always()
 
