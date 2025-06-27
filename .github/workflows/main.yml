@@ -22,7 +22,7 @@ jobs:
       with:
         ocaml-compiler: 4.13.1
     - run: opam config report
-    - run: opam exec -- bash -c 'install -d foo/'
+    - run: opam exec -- bash -c 'install -d .github/'
 
 
   buildv3216:
@@ -42,5 +42,5 @@ jobs:
       with:
         ocaml-compiler: 4.13.1
     - run: opam config report
-    - run: opam exec -- bash -c 'install -d foo/'
+    - run: opam exec -- bash -c 'install -d .github/'
 
